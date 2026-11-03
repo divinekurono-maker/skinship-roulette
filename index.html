@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#16112a">
+  <meta name="description" content="425種類のスキンシップから、今日のお題をランダムにひとつ。カテゴリー選択・重複防止・コピー対応。">
+  <title>ふれあいルーレット | 425のお題</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#16112a; --panel:#231b3e; --panel2:#2b214b; --text:#f9f4ff;
+      --muted:#bcb0d3; --line:rgba(255,255,255,.13); --pink:#ff7cac; --peach:#ffc4b9;
+      --lav:#c6a8ff; --accent:#ff95b4; --shadow:0 28px 85px rgba(10,5,25,.45);
+    }
+    *{box-sizing:border-box}
+    html{min-height:100%;scroll-behavior:smooth}
+    body{margin:0;min-height:100dvh;overflow-x:hidden;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans",Meiryo,sans-serif;
+      background:radial-gradient(ellipse 65% 55% at 5% 0%,rgba(170,99,197,.20),transparent 80%),
+      radial-gradient(ellipse 70% 58% at 100% 45%,rgba(255,120,154,.12),transparent 80%),
+      linear-gradient(160deg,#1a1230 5%,#151027 57%,#1d142e 100%);color:var(--text);}
+    .orb{position:fixed;border-radius:100%;filter:blur(50px);pointer-events:none;opacity:.28;z-index:0}
+    .orb.one{width:270px;height:270px;background:#b97cff;top:9%;left:-180px}
+    .orb.two{width:330px;height:330px;background:#ff78ac;bottom:-130px;right:-180px}
+    .wrap{position:relative;z-index:1;max-width:620px;min-height:100dvh;margin:auto;padding:35px 22px 35px;display:flex;flex-direction:column}
+    header{text-align:center;margin:12px 0 26px}
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;letter-spacing:.19em;text-transform:uppercase;font-size:11px;font-weight:800;color:#ebbad7}
+    .eyebrow .spark{font-size:17px;color:var(--peach)}
+    h1{font-size:clamp(30px,6.7vw,43px);font-weight:850;letter-spacing:.015em;line-height:1.25;margin:11px 0 10px}
+    h1 .shine{background:linear-gradient(105deg,#ffc5d5,#ffd6bd 52%,#d6bbff);background-clip:text;-webkit-background-clip:text;color:transparent}
+    .subtitle{font-size:13px;color:var(--muted);line-height:1.8;margin:0}
+    .card{position:relative;isolation:isolate;border:1px solid rgba(255,255,255,.20);border-radius:28px;
+      background:linear-gradient(150deg,rgba(66,45,93,.96),rgba(36,27,65,.97) 65%,rgba(45,29,63,.97));
+      box-shadow:var(--shadow);overflow:hidden;padding:29px 27px 27px;min-height:287px;display:flex;align-items:center;flex-direction:column;justify-content:center;text-align:center}
+    .card:before{content:'';position:absolute;z-index:-1;inset:0;background:radial-gradient(ellipse 100% 70% at 50% -25%,rgba(255,168,201,.22),transparent 80%)}
+    .card:after{content:'';position:absolute;z-index:-1;width:270px;height:270px;right:-120px;bottom:-190px;background:rgba(158,106,224,.12);border-radius:50%;filter:blur(10px)}
+    .card .card-label{font-size:10px;letter-spacing:.24em;font-weight:800;color:#e7c2e2;opacity:.9}
+    .card .heart{font-size:30px;line-height:1;margin:17px 0 14px;color:#ffa4bf;filter:drop-shadow(0 0 10px rgba(255,124,172,.38))}
+    .card .prompt{font-size:clamp(22px,5.5vw,31px);font-weight:780;line-height:1.55;letter-spacing:.025em;min-height:92px;display:flex;align-items:center;justify-content:center;word-break:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .card .meta{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:18px}
+    .pill{padding:8px 13px;font-size:11px;font-weight:750;letter-spacing:.03em;border-radius:99px;background:rgba(255,255,255,.09);color:#ead7f2;border:1px solid rgba(255,255,255,.1)}
+    .pill.no{color:#ffd2df;background:rgba(255,128,177,.11)}
+    .card.enter .heart,.card.enter .prompt,.card.enter .meta{animation:rise .34s cubic-bezier(.2,.8,.25,1) both}
+    .card.enter .prompt{animation-delay:.045s}.card.enter .meta{animation-delay:.08s}
+    @keyframes rise{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .primary{width:100%;height:64px;display:flex;align-items:center;justify-content:center;gap:12px;border:0;border-radius:20px;
+      color:#32182f;font-family:inherit;font-size:17px;font-weight:850;letter-spacing:.06em;cursor:pointer;margin-top:18px;
+      background:linear-gradient(110deg,#ffb1c5 0%,#ffccba 51%,#ffb7d9 100%);box-shadow:0 10px 30px rgba(255,124,172,.22);
+      transition:transform .17s ease,box-shadow .17s ease;}
+    .primary:hover{transform:translateY(-2px);box-shadow:0 13px 35px rgba(255,124,172,.29)}
+    .primary:active{transform:translateY(1px)}
+    .primary:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #ffd3e2;outline-offset:3px}
+    .primary svg{width:22px;height:22px;stroke-width:2.2}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:11px;margin:15px 2px 24px}
+    .secondary{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.045);
+      color:#e7dff4;padding:11px 13px;font:700 12px inherit;white-space:nowrap;cursor:pointer;transition:background .15s}
+    .secondary:hover{background:rgba(255,255,255,.09)}
+    .secondary:disabled{opacity:.42;cursor:not-allowed}
+    .secondary svg{width:16px;height:16px}
+    .remaining{font-size:12px;color:var(--muted);text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}
+    .settings{border:1px solid var(--line);background:rgba(31,23,53,.67);border-radius:23px;padding:21px 20px 19px}
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:17px}
+    .section-head h2{font-size:14px;letter-spacing:.04em;margin:0}
+    .section-head .hint{font-size:11px;color:var(--muted)}
+    label.setting-label{display:block;margin-bottom:8px;font-size:12px;font-weight:750;color:#dccfe9}
+    .select-wrap{position:relative}
+    select{width:100%;height:48px;appearance:none;-webkit-appearance:none;border:1px solid rgba(255,255,255,.18);border-radius:13px;
+      color:var(--text);background:#342849;padding:0 38px 0 14px;font-family:inherit;font-size:14px;cursor:pointer}
+    .chevron{position:absolute;right:15px;top:18px;pointer-events:none;border-right:2px solid #dbc6ec;border-bottom:2px solid #dbc6ec;width:8px;height:8px;transform:rotate(45deg)}
+    .checkrow{display:flex;gap:12px;align-items:flex-start;cursor:pointer;margin-top:17px;color:var(--text)}
+    .checkrow input{appearance:none;-webkit-appearance:none;width:20px;height:20px;flex:none;margin:1px 0 0;border:1px solid #a388c1;border-radius:6px;background:#302444;cursor:pointer;position:relative}
+    .checkrow input:checked{background:linear-gradient(120deg,#ff9bc0,#c1a4fb);border-color:transparent}
+    .checkrow input:checked:after{content:'✓';position:absolute;left:4px;top:-1px;font-size:15px;font-weight:900;color:#281633}
+    .checkrow .main{display:block;font-size:13px;font-weight:700;line-height:1.45}
+    .checkrow .sub{display:block;font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5}
+    .setting-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);margin-top:19px;padding-top:15px}
+    .setting-foot span{font-size:11px;color:var(--muted)}
+    .text-button{border:0;background:none;padding:4px 0;color:#f2bdd3;font-family:inherit;font-weight:750;font-size:11px;cursor:pointer}
+    .text-button:hover{text-decoration:underline}
+    .history{margin-top:22px}
+    .history h2{font-size:13px;color:#eadced;margin:0 0 12px;display:flex;justify-content:space-between;align-items:center}
+    .history h2 span{font-weight:450;color:var(--muted);font-size:11px}
+    .history-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+    .history-item{display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.035);padding:12px 13px}
+    .history-item .num{font-variant-numeric:tabular-nums;font-size:11px;font-weight:800;color:#e6b9d8;min-width:35px}
+    .history-item .name{font-size:12px;color:#dcd1ea;line-height:1.5}
+    .empty-history{border:1px dashed rgba(255,255,255,.16);border-radius:12px;text-align:center;padding:18px 10px;color:var(--muted);font-size:12px}
+    footer{margin-top:auto;padding-top:24px;text-align:center;color:#a599be;font-size:10px;line-height:1.8}
+    .toast{position:fixed;z-index:10;left:50%;bottom:26px;transform:translate(-50%,20px);opacity:0;pointer-events:none;padding:11px 19px;border-radius:999px;
+      background:#f8deeb;color:#31233d;font-size:12px;font-weight:800;box-shadow:0 10px 40px rgba(0,0,0,.3);transition:opacity .2s,transform .2s;white-space:nowrap}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    @media (max-width:420px){.wrap{padding:24px 16px 25px}header{margin:8px 0 22px}.card{min-height:282px;padding:24px 18px}.controls{gap:6px}.secondary{font-size:11px;padding:10px 11px}.remaining{font-size:11px}}
+    @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="orb one" aria-hidden="true"></div><div class="orb two" aria-hidden="true"></div>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow"><span class="spark">✦</span> TOUCH PROMPT GENERATOR <span class="spark">✦</span></div>
+      <h1>ふれあい<span class="shine">ルーレット</span></h1>
+      <p class="subtitle">425種類のスキンシップから、今日のお題をひとつ。<br>ふたりのペースで、気軽に楽しもう ♡</p>
+    </header>
+
+    <section aria-label="抽選されたお題" class="card" id="promptCard">
+      <div class="card-label">TODAY'S TOUCH</div>
+      <div class="heart" aria-hidden="true">♡</div>
+      <div class="prompt" id="prompt" aria-live="polite" aria-atomic="true">ボタンを押して<br>お題を引いてみよう</div>
+      <div class="meta" id="meta"><span class="pill">全425種類のお題</span></div>
+    </section>
+
+    <button id="drawBtn" class="primary" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M20 8a8 8 0 0 0-14-2L4 10M4 16a8 8 0 0 0 14 2l2-4"/></svg>
+      お題をひとつ引く
+    </button>
+    <div class="controls">
+      <button class="secondary" id="copyBtn" disabled type="button" title="表示中のお題をコピー">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>コピー
+      </button>
+      <span class="remaining" id="remaining" aria-live="polite">あと 425 / 425 種類</span>
+      <button class="secondary" id="backBtn" disabled type="button" title="ひとつ前のお題を表示">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h9a7 7 0 0 1 0 14h-2" transform="translate(0 -2)"/></svg>ひとつ前
+      </button>
+    </div>
+
+    <section class="settings" aria-labelledby="settingTitle">
+      <div class="section-head"><h2 id="settingTitle">⚙️ 抽選の設定</h2><span class="hint" id="totalLabel">425種類から抽選</span></div>
+      <label for="category" class="setting-label">カテゴリ</label>
+      <div class="select-wrap"><select id="category"><option value="all">すべてのカテゴリ（全425種類）</option></select><span class="chevron" aria-hidden="true"></span></div>
+      <label class="checkrow"><input id="includeFantasy" type="checkbox" checked><span><span class="main">ファンタジーのお題も含める</span><span class="sub">獣耳・尻尾・翼などの異種族向けのお題</span></span></label>
+      <label class="checkrow"><input id="avoidRepeat" type="checkbox" checked><span><span class="main">同じお題は一巡するまで出さない</span><span class="sub">対象のお題を全部引いたら、自動で一巡目に戻る</span></span></label>
+      <div class="setting-foot"><span>番号と文章は元のリストに準拠</span><button type="button" class="text-button" id="resetBtn">抽選履歴をリセット</button></div>
+    </section>
+
+    <section class="history" aria-label="最近引いたお題">
+      <h2>最近のお題 <span>直近5件</span></h2>
+      <ol class="history-list" id="historyList"><li class="empty-history">まだお題はありません</li></ol>
+    </section>
+    <footer>お互いの同意を大切に。無理のない範囲で楽しんでね。<br>オフラインで動作・外部へのデータ送信なし</footer>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="application/json" id="sourceData">{"items":[{"id":1,"text":"手をつなぐ","category":1},{"id":2,"text":"恋人つなぎをする","category":1},{"id":3,"text":"指先だけをつなぐ","category":1},{"id":4,"text":"小指を絡める","category":1},{"id":5,"text":"両手を握り合う","category":1},{"id":6,"text":"手のひらを重ねる","category":1},{"id":7,"text":"手の大きさを比べる","category":1},{"id":8,"text":"指を一本ずつ絡める","category":1},{"id":9,"text":"手の甲を撫でる","category":1},{"id":10,"text":"手のひらを撫でる","category":1},{"id":11,"text":"指先を撫でる","category":1},{"id":12,"text":"指の関節をなぞる","category":1},{"id":13,"text":"手の甲にキスする","category":1},{"id":14,"text":"指先にキスする","category":1},{"id":15,"text":"手のひらにキスする","category":1},{"id":16,"text":"相手の手を自分の頬に当てる","category":1},{"id":17,"text":"相手の手を自分の胸元に当てる","category":1},{"id":18,"text":"相手の手を両手で包み込む","category":1},{"id":19,"text":"冷たい手を温める","category":1},{"id":20,"text":"手を握ったまま親指で撫でる","category":1},{"id":21,"text":"指切りをする","category":1},{"id":22,"text":"指先同士をくっつける","category":1},{"id":23,"text":"手をつないだまま軽く揺らす","category":1},{"id":24,"text":"相手の指で遊ぶ","category":1},{"id":25,"text":"手のひらに文字を書く","category":1},{"id":26,"text":"手のひらをくすぐる","category":1},{"id":27,"text":"手を引いて歩く","category":1},{"id":28,"text":"手を引いて抱き寄せる","category":1},{"id":29,"text":"手を握って眠る","category":1},{"id":30,"text":"手を握って安心させる","category":1},{"id":31,"text":"正面から抱きしめる","category":2},{"id":32,"text":"後ろから抱きしめる","category":2},{"id":33,"text":"横から抱きしめる","category":2},{"id":34,"text":"座ったまま抱き合う","category":2},{"id":35,"text":"寝転がったまま抱き合う","category":2},{"id":36,"text":"片腕で抱き寄せる","category":2},{"id":37,"text":"両腕で包み込む","category":2},{"id":38,"text":"腰に腕を回して抱き寄せる","category":2},{"id":39,"text":"肩に腕を回して抱き寄せる","category":2},{"id":40,"text":"首元に腕を回して抱きつく","category":2},{"id":41,"text":"胸元に顔を埋めて抱きつく","category":2},{"id":42,"text":"背中に顔を埋めて抱きつく","category":2},{"id":43,"text":"お腹に抱きつく","category":2},{"id":44,"text":"膝に抱きつく","category":2},{"id":45,"text":"不意に抱きつく","category":2},{"id":46,"text":"再会した瞬間に抱きつく","category":2},{"id":47,"text":"別れ際に抱きしめる","category":2},{"id":48,"text":"泣いている相手を抱きしめる","category":2},{"id":49,"text":"眠そうな相手を抱き寄せる","category":2},{"id":50,"text":"寒がる相手を抱きしめる","category":2},{"id":51,"text":"抱きしめたまま左右に揺れる","category":2},{"id":52,"text":"抱きしめたまま背中を撫でる","category":2},{"id":53,"text":"抱きしめたまま頭を撫でる","category":2},{"id":54,"text":"抱きしめたまま耳元で囁く","category":2},{"id":55,"text":"抱きしめたまま見つめ合う","category":2},{"id":56,"text":"抱きしめたまま額を合わせる","category":2},{"id":57,"text":"抱きしめたまま眠る","category":2},{"id":58,"text":"相手を胸に抱き込む","category":2},{"id":59,"text":"相手にしがみつく","category":2},{"id":60,"text":"抱きしめる力を少し強める","category":2},{"id":61,"text":"ゆっくり腕をほどく","category":2},{"id":62,"text":"離れようとする相手を優しく引き寄せる","category":2},{"id":63,"text":"背後から肩越しに顔を覗かせる","category":2},{"id":64,"text":"座っている相手を後ろから包み込む","category":2},{"id":65,"text":"互いの背中に腕を回して密着する","category":2},{"id":66,"text":"額にキスする","category":3},{"id":67,"text":"頬にキスする","category":3},{"id":68,"text":"唇に軽くキスする","category":3},{"id":69,"text":"唇を重ねて少し長めにキスする","category":3},{"id":70,"text":"鼻先にキスする","category":3},{"id":71,"text":"鼻の頭にキスする","category":3},{"id":72,"text":"こめかみにキスする","category":3},{"id":73,"text":"まぶたにキスする","category":3},{"id":74,"text":"眉間にキスする","category":3},{"id":75,"text":"眉の上にキスする","category":3},{"id":76,"text":"耳に軽くキスする","category":3},{"id":77,"text":"耳の後ろにキスする","category":3},{"id":78,"text":"髪にキスする","category":3},{"id":79,"text":"頭頂部にキスする","category":3},{"id":80,"text":"首筋に軽くキスする","category":3},{"id":81,"text":"肩にキスする","category":3},{"id":82,"text":"鎖骨付近にキスする","category":3},{"id":83,"text":"手首にキスする","category":3},{"id":84,"text":"腕にキスする","category":3},{"id":85,"text":"肘にキスする","category":3},{"id":86,"text":"指の関節にキスする","category":3},{"id":87,"text":"背中にキスする","category":3},{"id":88,"text":"おでこ同士をくっつけてからキスする","category":3},{"id":89,"text":"頬を両手で包んでキスする","category":3},{"id":90,"text":"顎を優しく支えてキスする","category":3},{"id":91,"text":"抱きしめながらキスする","category":3},{"id":92,"text":"手をつなぎながらキスする","category":3},{"id":93,"text":"寝起きにキスする","category":3},{"id":94,"text":"おやすみのキスをする","category":3},{"id":95,"text":"いってらっしゃいのキスをする","category":3},{"id":96,"text":"おかえりのキスをする","category":3},{"id":97,"text":"ありがとうのキスをする","category":3},{"id":98,"text":"仲直りのキスをする","category":3},{"id":99,"text":"不意打ちで頬にキスする","category":3},{"id":100,"text":"キスしたあとに額を合わせる","category":3},{"id":101,"text":"キスしたあとに微笑み合う","category":3},{"id":102,"text":"互いの頬に交互にキスする","category":3},{"id":103,"text":"キスをねだるように顔を近づける","category":3},{"id":104,"text":"相手のキスに応えて顔を寄せる","category":3},{"id":105,"text":"眠っている相手の額にそっとキスする","category":3},{"id":106,"text":"頬を撫でる","category":4},{"id":107,"text":"両頬を包み込む","category":4},{"id":108,"text":"頬を寄せ合う","category":4},{"id":109,"text":"頬ずりする","category":4},{"id":110,"text":"鼻先をくっつける","category":4},{"id":111,"text":"鼻先を擦り合わせる","category":4},{"id":112,"text":"額を合わせる","category":4},{"id":113,"text":"こめかみを寄せる","category":4},{"id":114,"text":"顎を優しく持ち上げる","category":4},{"id":115,"text":"顎の下を撫でる","category":4},{"id":116,"text":"頬を軽くつつく","category":4},{"id":117,"text":"頬を優しくつまむ","category":4},{"id":118,"text":"頬を軽くむにむにする","category":4},{"id":119,"text":"頬を両手で挟む","category":4},{"id":120,"text":"頬に手のひらを当てる","category":4},{"id":121,"text":"相手の顔を覗き込む","category":4},{"id":122,"text":"顔を近づけて見つめ合う","category":4},{"id":123,"text":"相手の頬に自分の額を寄せる","category":4},{"id":124,"text":"顔についたものを指で取る","category":4},{"id":125,"text":"涙を指先で拭う","category":4},{"id":126,"text":"目元を優しく撫でる","category":4},{"id":127,"text":"眉間のしわを指で伸ばす","category":4},{"id":128,"text":"鼻先を指でつつく","category":4},{"id":129,"text":"お互いの頬をくっつけて写真を撮る","category":4},{"id":130,"text":"顔を両手で包んで目を合わせる","category":4},{"id":131,"text":"頭を撫でる","category":5},{"id":132,"text":"髪を梳く","category":5},{"id":133,"text":"指で髪を梳く","category":5},{"id":134,"text":"髪を耳にかける","category":5},{"id":135,"text":"前髪を整える","category":5},{"id":136,"text":"寝癖を直す","category":5},{"id":137,"text":"髪を優しく触る","category":5},{"id":138,"text":"毛先を指に巻く","category":5},{"id":139,"text":"髪の一房を指でつまむ","category":5},{"id":140,"text":"頭をぽんぽんする","category":5},{"id":141,"text":"頭をわしゃわしゃ撫でる","category":5},{"id":142,"text":"後頭部を支える","category":5},{"id":143,"text":"頭を胸元に引き寄せる","category":5},{"id":144,"text":"相手の頭に顎を乗せる","category":5},{"id":145,"text":"相手の頭に頬を乗せる","category":5},{"id":146,"text":"頭同士を寄せ合う","category":5},{"id":147,"text":"髪に顔を埋める","category":5},{"id":148,"text":"髪の香りをそっと嗅ぐ","category":5},{"id":149,"text":"頭皮を優しくマッサージする","category":5},{"id":150,"text":"髪を結んであげる","category":5},{"id":151,"text":"髪をほどいてあげる","category":5},{"id":152,"text":"髪飾りをつけてあげる","category":5},{"id":153,"text":"髪についた葉っぱを取る","category":5},{"id":154,"text":"頭を膝に乗せてもらう","category":5},{"id":155,"text":"頭を撫でてもらいながら目を閉じる","category":5},{"id":156,"text":"隣同士で密着して座る","category":6},{"id":157,"text":"肩を寄せ合う","category":6},{"id":158,"text":"太もも同士をくっつける","category":6},{"id":159,"text":"膝同士をくっつける","category":6},{"id":160,"text":"肩に頭を乗せる","category":6},{"id":161,"text":"肩に頬を寄せる","category":6},{"id":162,"text":"腕に抱きつく","category":6},{"id":163,"text":"腕を組む","category":6},{"id":164,"text":"腕に頬を擦り寄せる","category":6},{"id":165,"text":"相手の膝に手を置く","category":6},{"id":166,"text":"相手の膝を優しく撫でる","category":6},{"id":167,"text":"相手の膝に頭を乗せる","category":6},{"id":168,"text":"膝枕をする","category":6},{"id":169,"text":"膝枕をしてもらう","category":6},{"id":170,"text":"膝枕をしながら髪を撫でる","category":6},{"id":171,"text":"膝枕をしながら頬を撫でる","category":6},{"id":172,"text":"相手の膝の上に横向きに座る","category":6},{"id":173,"text":"相手の膝の上で向かい合って座る","category":6},{"id":174,"text":"相手を膝の上に座らせる","category":6},{"id":175,"text":"相手の背中を自分の胸に預けてもらう","category":6},{"id":176,"text":"相手の肩を抱いて座る","category":6},{"id":177,"text":"背中合わせで座る","category":6},{"id":178,"text":"背中を預け合う","category":6},{"id":179,"text":"足を軽く絡めて座る","category":6},{"id":180,"text":"手をつないだまま映画を見る","category":6},{"id":181,"text":"一枚の毛布に一緒にくるまる","category":6},{"id":182,"text":"ソファで寄り添う","category":6},{"id":183,"text":"相手の腕を枕にする","category":6},{"id":184,"text":"肩を貸して休ませる","category":6},{"id":185,"text":"相手を抱き寄せて一緒に本を読む","category":6},{"id":186,"text":"添い寝する","category":7},{"id":187,"text":"向かい合って眠る","category":7},{"id":188,"text":"背中合わせで眠る","category":7},{"id":189,"text":"背後から抱きしめて眠る","category":7},{"id":190,"text":"抱き合って眠る","category":7},{"id":191,"text":"手をつないで眠る","category":7},{"id":192,"text":"指先だけ触れ合わせて眠る","category":7},{"id":193,"text":"額をくっつけて眠る","category":7},{"id":194,"text":"頬を寄せて眠る","category":7},{"id":195,"text":"肩に頭を乗せて眠る","category":7},{"id":196,"text":"胸元に頭を預けて眠る","category":7},{"id":197,"text":"腕枕をする","category":7},{"id":198,"text":"腕枕をしてもらう","category":7},{"id":199,"text":"お腹に頭を乗せる","category":7},{"id":200,"text":"太ももに頭を乗せる","category":7},{"id":201,"text":"相手の背中に腕を回す","category":7},{"id":202,"text":"相手の腰に腕を回す","category":7},{"id":203,"text":"相手の手を胸元で握る","category":7},{"id":204,"text":"相手の背中を優しくさする","category":7},{"id":205,"text":"寝つくまで頭を撫でる","category":7},{"id":206,"text":"寝つくまで手を握る","category":7},{"id":207,"text":"眠る前に額へキスする","category":7},{"id":208,"text":"眠る前に頬へキスする","category":7},{"id":209,"text":"眠る前に抱きしめる","category":7},{"id":210,"text":"寝ぼけながら抱きつく","category":7},{"id":211,"text":"寝ぼけながら手を探す","category":7},{"id":212,"text":"起きたときに抱き寄せる","category":7},{"id":213,"text":"起きたときに頬ずりする","category":7},{"id":214,"text":"寝返りを打った相手にそっと寄り添う","category":7},{"id":215,"text":"同じ毛布の中で足先を触れ合わせる","category":7},{"id":216,"text":"相手の腕にすり寄る","category":8},{"id":217,"text":"相手の肩にすり寄る","category":8},{"id":218,"text":"相手の胸元にすり寄る","category":8},{"id":219,"text":"頭をぐりぐり押しつける","category":8},{"id":220,"text":"頬をぐりぐり擦りつける","category":8},{"id":221,"text":"袖をつまんで引っ張る","category":8},{"id":222,"text":"服の裾をつかむ","category":8},{"id":223,"text":"背中にくっついて歩く","category":8},{"id":224,"text":"後ろから抱きついて甘える","category":8},{"id":225,"text":"相手の手を取って自分の頭に乗せる","category":8},{"id":226,"text":"撫でてほしそうに頭を差し出す","category":8},{"id":227,"text":"抱きしめてほしそうに両腕を広げる","category":8},{"id":228,"text":"相手の膝に頭を押しつける","category":8},{"id":229,"text":"相手の腕に顔を埋める","category":8},{"id":230,"text":"相手の肩に顎を乗せる","category":8},{"id":231,"text":"相手の頭を軽くつつく","category":8},{"id":232,"text":"おでこを指でつんと押す","category":8},{"id":233,"text":"鼻を軽くつまむ","category":8},{"id":234,"text":"脇腹を軽くくすぐる","category":8},{"id":235,"text":"手のひらをくすぐる","category":8},{"id":236,"text":"くすぐり合う","category":8},{"id":237,"text":"指で相手の腕をとことこ歩かせる","category":8},{"id":238,"text":"相手の手を両手で捕まえる","category":8},{"id":239,"text":"手をつないだままくるりと回る","category":8},{"id":240,"text":"じゃんけんで勝ったらハグする","category":8},{"id":241,"text":"頬を寄せてふざけ合う","category":8},{"id":242,"text":"互いの髪をくしゃくしゃにする","category":8},{"id":243,"text":"鼻先同士で軽く押し合う","category":8},{"id":244,"text":"相手の背中に隠れる","category":8},{"id":245,"text":"抱きついたまま離れたがらない","category":8},{"id":246,"text":"腰を抱き寄せて見つめ合う","category":9},{"id":247,"text":"頬に触れながら見つめ合う","category":9},{"id":248,"text":"額を合わせて目を閉じる","category":9},{"id":249,"text":"お互いの鼓動を感じるように抱き合う","category":9},{"id":250,"text":"胸元に耳を当てる","category":9},{"id":251,"text":"相手の手を自分の心臓の上に重ねる","category":9},{"id":252,"text":"背中をゆっくり撫でる","category":9},{"id":253,"text":"肩から腕へ指先を滑らせる","category":9},{"id":254,"text":"首の後ろを優しく撫でる","category":9},{"id":255,"text":"うなじに手を添える","category":9},{"id":256,"text":"肩甲骨のあたりを撫でる","category":9},{"id":257,"text":"腰にそっと手を添える","category":9},{"id":258,"text":"腰をゆっくり撫でる","category":9},{"id":259,"text":"背中から腰へ手を滑らせる","category":9},{"id":260,"text":"手首から指先へ撫で下ろす","category":9},{"id":261,"text":"腕の内側を優しく撫でる","category":9},{"id":262,"text":"頬から顎へ指先を滑らせる","category":9},{"id":263,"text":"顎の輪郭を指でなぞる","category":9},{"id":264,"text":"髪を撫でながら顔を近づける","category":9},{"id":265,"text":"相手の手を取って自分の頬に寄せる","category":9},{"id":266,"text":"肩に顔を埋めて抱きしめる","category":9},{"id":267,"text":"首元に顔を寄せて抱きしめる","category":9},{"id":268,"text":"相手の背中に手を回してゆっくり引き寄せる","category":9},{"id":269,"text":"互いの額を合わせて微笑む","category":9},{"id":270,"text":"抱き合ったまま静かに呼吸を合わせる","category":9},{"id":271,"text":"ダンス中に腰へ手を添える","category":9},{"id":272,"text":"ダンス中に手を握る","category":9},{"id":273,"text":"相手を軽く回転させて抱き寄せる","category":9},{"id":274,"text":"相手の手を取ってお辞儀のようにキスする","category":9},{"id":275,"text":"キスのあとに鼻先を寄せ合う","category":9},{"id":276,"text":"疲れた相手の頭を撫でる","category":10},{"id":277,"text":"肩を揉む","category":10},{"id":278,"text":"首の後ろを優しく揉む","category":10},{"id":279,"text":"背中をさする","category":10},{"id":280,"text":"腰を優しくさする","category":10},{"id":281,"text":"手をマッサージする","category":10},{"id":282,"text":"指を一本ずつほぐす","category":10},{"id":283,"text":"足をマッサージする","category":10},{"id":284,"text":"ふくらはぎを優しく揉む","category":10},{"id":285,"text":"足裏をマッサージする","category":10},{"id":286,"text":"こめかみを優しくほぐす","category":10},{"id":287,"text":"肩甲骨周辺をさする","category":10},{"id":288,"text":"手のひらを温める","category":10},{"id":289,"text":"冷えた頬を両手で温める","category":10},{"id":290,"text":"寒い相手を腕の中に包む","category":10},{"id":291,"text":"泣いている相手の背中をさする","category":10},{"id":292,"text":"不安そうな相手の手を握る","category":10},{"id":293,"text":"緊張している相手の肩に手を置く","category":10},{"id":294,"text":"相手の額に手を当てて熱を確かめる","category":10},{"id":295,"text":"眠そうな相手の頭を支える","category":10},{"id":296,"text":"相手の頭を自分の肩に誘導する","category":10},{"id":297,"text":"膝枕で休ませる","category":10},{"id":298,"text":"相手を抱きしめながら背中をぽんぽんする","category":10},{"id":299,"text":"相手の頬を撫でながら慰める","category":10},{"id":300,"text":"相手の手を包んで温める","category":10},{"id":301,"text":"髪を優しく整えてあげる","category":10},{"id":302,"text":"相手の肩にブランケットを掛けて抱き寄せる","category":10},{"id":303,"text":"疲れた相手を胸元で休ませる","category":10},{"id":304,"text":"相手の手を握りながら眠るまで付き添う","category":10},{"id":305,"text":"安心できるようにゆっくり抱きしめる","category":10},{"id":306,"text":"歩きながら手をつなぐ","category":11},{"id":307,"text":"歩きながら腕を組む","category":11},{"id":308,"text":"人混みで手を引く","category":11},{"id":309,"text":"横断歩道で手を握る","category":11},{"id":310,"text":"階段で手を差し伸べる","category":11},{"id":311,"text":"段差を越えるときに腰を支える","category":11},{"id":312,"text":"隣に座るときに肩を寄せる","category":11},{"id":313,"text":"電車で肩を貸す","category":11},{"id":314,"text":"電車で手を握る","category":11},{"id":315,"text":"エレベーターでそっと寄り添う","category":11},{"id":316,"text":"料理中に後ろから抱きつく","category":11},{"id":317,"text":"料理中に肩へ顎を乗せる","category":11},{"id":318,"text":"食器洗い中に背中を撫でる","category":11},{"id":319,"text":"一緒にテレビを見ながら手をつなぐ","category":11},{"id":320,"text":"ゲーム中に肩をくっつける","category":11},{"id":321,"text":"勉強中に頭をぽんぽんする","category":11},{"id":322,"text":"読書中に膝を寄せ合う","category":11},{"id":323,"text":"映画を見ながら腕に抱きつく","category":11},{"id":324,"text":"写真を撮るときに肩を抱く","category":11},{"id":325,"text":"写真を撮るときに頬を寄せる","category":11},{"id":326,"text":"寒い日に手をポケットの中でつなぐ","category":11},{"id":327,"text":"雨の日に相手を傘の内側へ抱き寄せる","category":11},{"id":328,"text":"風で乱れた髪を整える","category":11},{"id":329,"text":"服についた糸くずを取る","category":11},{"id":330,"text":"襟元を直してあげる","category":11},{"id":331,"text":"マフラーを巻いてあげる","category":11},{"id":332,"text":"手袋越しに手を握る","category":11},{"id":333,"text":"一緒にストレッチして体を支え合う","category":11},{"id":334,"text":"ダンスの練習で手を取り合う","category":11},{"id":335,"text":"記念写真で背中に腕を回す","category":11},{"id":336,"text":"獣耳を優しく撫でる","category":12},{"id":337,"text":"獣耳の付け根を撫でる","category":12},{"id":338,"text":"獣耳の後ろを掻いてあげる","category":12},{"id":339,"text":"耳の毛並みを整える","category":12},{"id":340,"text":"耳同士を触れ合わせる","category":12},{"id":341,"text":"耳をぴったり寄せ合う","category":12},{"id":342,"text":"耳の先にキスする","category":12},{"id":343,"text":"尻尾を撫でる","category":12},{"id":344,"text":"尻尾の毛並みを整える","category":12},{"id":345,"text":"尻尾同士を絡める","category":12},{"id":346,"text":"尻尾で相手の腰を包む","category":12},{"id":347,"text":"尻尾で相手の手首に触れる","category":12},{"id":348,"text":"尻尾で相手の背中を撫でる","category":12},{"id":349,"text":"尻尾を相手の膝に乗せる","category":12},{"id":350,"text":"尻尾で相手を引き寄せる","category":12},{"id":351,"text":"尻尾を絡めたまま眠る","category":12},{"id":352,"text":"尻尾の先同士をくっつける","category":12},{"id":353,"text":"尻尾で相手の頬をくすぐる","category":12},{"id":354,"text":"翼で相手を包み込む","category":12},{"id":355,"text":"翼の下に相手を招き入れる","category":12},{"id":356,"text":"翼を重ね合わせる","category":12},{"id":357,"text":"翼の羽根を整えてあげる","category":12},{"id":358,"text":"翼の付け根を優しく撫でる","category":12},{"id":359,"text":"翼の先で相手の肩に触れる","category":12},{"id":360,"text":"翼で風を遮ってあげる","category":12},{"id":361,"text":"翼に包まれて眠る","category":12},{"id":362,"text":"羽毛に頬を埋める","category":12},{"id":363,"text":"羽毛を優しく梳く","category":12},{"id":364,"text":"角を優しく撫でる","category":12},{"id":365,"text":"角の根元を指先で触れる","category":12},{"id":366,"text":"角同士を軽く合わせる","category":12},{"id":367,"text":"角に額を寄せる","category":12},{"id":368,"text":"角を磨いてあげる","category":12},{"id":369,"text":"鱗を優しく撫でる","category":12},{"id":370,"text":"鱗の模様を指でなぞる","category":12},{"id":371,"text":"鱗の手入れをしてあげる","category":12},{"id":372,"text":"鱗のある頬に頬ずりする","category":12},{"id":373,"text":"大きな爪のある手を両手で包む","category":12},{"id":374,"text":"肉球を優しく触る","category":12},{"id":375,"text":"肉球同士を合わせる","category":12},{"id":376,"text":"肉球をぷにぷにする","category":12},{"id":377,"text":"毛並みをブラッシングする","category":12},{"id":378,"text":"たてがみに顔を埋める","category":12},{"id":379,"text":"たてがみを梳いてあげる","category":12},{"id":380,"text":"長い耳を優しく整える","category":12},{"id":381,"text":"触角同士を触れ合わせる","category":12},{"id":382,"text":"触角で相手の額に触れる","category":12},{"id":383,"text":"触手で優しく手をつなぐ","category":12},{"id":384,"text":"複数の腕で相手を包み込む","category":12},{"id":385,"text":"大きな体で小さな恋人を包み込む","category":12},{"id":386,"text":"小さな恋人を手のひらに乗せる","category":12},{"id":387,"text":"巨体の恋人の指に抱きつく","category":12},{"id":388,"text":"巨体の恋人の鼻先にキスする","category":12},{"id":389,"text":"小さな恋人を肩に乗せて頬を寄せる","category":12},{"id":390,"text":"大きな尻尾を枕にする","category":12},{"id":391,"text":"ふわふわの尻尾にくるまる","category":12},{"id":392,"text":"翼と腕を同時に使って抱きしめる","category":12},{"id":393,"text":"魔法で温めた手を重ねる","category":12},{"id":394,"text":"魔法で生み出した柔らかな光の中で抱き合う","category":12},{"id":395,"text":"互いの魔力を感じるために手のひらを合わせる","category":12},{"id":396,"text":"告白のあとに手を握る","category":13},{"id":397,"text":"告白のあとに抱きしめる","category":13},{"id":398,"text":"初めて恋人つなぎをする","category":13},{"id":399,"text":"初めて頬にキスする","category":13},{"id":400,"text":"初めて唇にキスする","category":13},{"id":401,"text":"記念日に長く抱きしめる","category":13},{"id":402,"text":"誕生日に抱きつく","category":13},{"id":403,"text":"プレゼントを渡したあとにハグする","category":13},{"id":404,"text":"サプライズの成功を喜んで抱き合う","category":13},{"id":405,"text":"嬉しい報告を聞いて手を握る","category":13},{"id":406,"text":"喜びのあまり飛びついて抱きつく","category":13},{"id":407,"text":"落ち込んだ相手の手をそっと取る","category":13},{"id":408,"text":"謝罪するときに相手の手を握る","category":13},{"id":409,"text":"仲直りして抱き合う","category":13},{"id":410,"text":"再会して頬を寄せ合う","category":13},{"id":411,"text":"久しぶりの再会で長く抱きしめる","category":13},{"id":412,"text":"別れ際に手を離すのを惜しむ","category":13},{"id":413,"text":"別れ際にもう一度抱きしめる","category":13},{"id":414,"text":"旅立つ相手の額にキスする","category":13},{"id":415,"text":"帰宅した相手を抱きしめて迎える","category":13},{"id":416,"text":"プロポーズのあとに手を重ねる","category":13},{"id":417,"text":"指輪をはめた手にキスする","category":13},{"id":418,"text":"結婚式で頬を寄せ合う","category":13},{"id":419,"text":"星空を眺めながら肩を抱く","category":13},{"id":420,"text":"花火を見ながら手をつなぐ","category":13},{"id":421,"text":"雪景色の中で抱き合う","category":13},{"id":422,"text":"雨音を聞きながら寄り添う","category":13},{"id":423,"text":"朝日を見ながら額を合わせる","category":13},{"id":424,"text":"夕日を眺めながら腰に腕を回す","category":13},{"id":425,"text":"眠る前に一日の感謝を込めてハグする","category":13}],"categories":[{"id":1,"name":"手・指","start":1,"end":30},{"id":2,"name":"ハグ・抱擁","start":31,"end":65},{"id":3,"name":"キス","start":66,"end":105},{"id":4,"name":"顔・頬","start":106,"end":130},{"id":5,"name":"髪・頭","start":131,"end":155},{"id":6,"name":"座位","start":156,"end":185},{"id":7,"name":"添い寝・睡眠","start":186,"end":215},{"id":8,"name":"甘える・じゃれ合う","start":216,"end":245},{"id":9,"name":"ロマンチックな接触","start":246,"end":275},{"id":10,"name":"甘やかす・癒やす","start":276,"end":305},{"id":11,"name":"日常生活","start":306,"end":335},{"id":12,"name":"異種族・ファンタジー","start":336,"end":395},{"id":13,"name":"特別な場面・感情表現","start":396,"end":425}]}</script>
+  <script>
+  (()=>{
+    'use strict';
+    const {items,categories}=JSON.parse(document.getElementById('sourceData').textContent);
+    const byId=new Map(items.map(item=>[item.id,item]));
+    const byCategory=new Map(categories.map(c=>[c.id,c]));
+    const $=id=>document.getElementById(id);
+    const els={card:$('promptCard'),prompt:$('prompt'),meta:$('meta'),remaining:$('remaining'),totalLabel:$('totalLabel'),
+      category:$('category'),includeFantasy:$('includeFantasy'),avoidRepeat:$('avoidRepeat'),historyList:$('historyList'),copyBtn:$('copyBtn'),backBtn:$('backBtn'),toast:$('toast')};
+    let drawn=[],timeline=[],current=null,toastTimer;
+    const key='fureai_roulette_v1';
+    const pad=n=>String(n).padStart(3,'0');
+    const load=()=>{try{const s=JSON.parse(localStorage.getItem(key)||'null');return s&&typeof s==='object'?s:null}catch{return null}};
+    const save=()=>{try{localStorage.setItem(key,JSON.stringify({drawn,timeline,category:els.category.value,includeFantasy:els.includeFantasy.checked,avoidRepeat:els.avoidRepeat.checked,current:current?.id??null}))}catch{}};
+    const saved=load();
+    for(const cat of categories){const o=document.createElement('option');o.value=cat.id;o.textContent=`${String(cat.id).padStart(2,'0')} ${cat.name}（${cat.end-cat.start+1}種類）`;els.category.appendChild(o)}
+    if(saved){
+      if(saved.category==='all'||categories.some(c=>String(c.id)===String(saved.category)))els.category.value=saved.category;
+      if(typeof saved.includeFantasy==='boolean')els.includeFantasy.checked=saved.includeFantasy;
+      if(typeof saved.avoidRepeat==='boolean')els.avoidRepeat.checked=saved.avoidRepeat;
+      if(Array.isArray(saved.drawn))drawn=[...new Set(saved.drawn.filter(id=>Number.isInteger(id)&&byId.has(id)))];
+      if(Array.isArray(saved.timeline))timeline=saved.timeline.filter(id=>Number.isInteger(id)&&byId.has(id)).slice(-100);
+      if(Number.isInteger(saved.current))current=byId.get(saved.current)||null;
+    }
+    // If fantasy alone was selected, retain access to its entries.
+    if(els.category.value==='12')els.includeFantasy.checked=true;
+    function pool(){return items.filter(x=>(els.category.value==='all'||x.category===Number(els.category.value))&&(els.includeFantasy.checked||x.category!==12))}
+    function count(){
+      const eligible=pool();const used=new Set(drawn);
+      const available=eligible.filter(x=>!used.has(x.id)).length;
+      const remainder=els.avoidRepeat.checked?available:eligible.length;
+      els.remaining.textContent=`あと ${remainder} / ${eligible.length} 種類`;
+      els.totalLabel.textContent=`${eligible.length}種類から抽選`;
+    }
+    function renderCurrent(animate=false){
+      els.prompt.textContent=current?current.text:'ボタンを押して\nお題を引いてみよう';
+      els.prompt.style.whiteSpace='pre-line';
+      els.meta.replaceChildren();
+      if(current){
+        const badge1=document.createElement('span');badge1.className='pill no';badge1.textContent='#'+pad(current.id);
+        const badge2=document.createElement('span');badge2.className='pill';badge2.textContent=byCategory.get(current.category).name;
+        els.meta.append(badge1,badge2);
+      }else{
+        const badge=document.createElement('span');badge.className='pill';badge.textContent='全425種類のお題';els.meta.append(badge);
+      }
+      els.copyBtn.disabled=!current;
+      els.backBtn.disabled=timeline.length<2;
+      if(animate){els.card.classList.remove('enter');void els.card.offsetWidth;els.card.classList.add('enter')}
+      count();renderHistory();save();
+    }
+    function renderHistory(){
+      els.historyList.replaceChildren();
+      const recent=timeline.slice(-5).reverse();
+      if(!recent.length){const li=document.createElement('li');li.className='empty-history';li.textContent='まだお題はありません';els.historyList.append(li);return}
+      for(const id of recent){const item=byId.get(id);if(!item)continue;
+        const li=document.createElement('li');li.className='history-item';
+        const no=document.createElement('span');no.className='num';no.textContent='#'+pad(id);
+        const name=document.createElement('span');name.className='name';name.textContent=item.text;
+        li.append(no,name);els.historyList.append(li)}
+    }
+    function toast(message){els.toast.textContent=message;els.toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>els.toast.classList.remove('show'),2100)}
+    function randomIndex(size){if(size<=1)return 0;if(window.crypto&&crypto.getRandomValues){const array=new Uint32Array(1);const max=Math.floor(4294967296/size)*size;do{crypto.getRandomValues(array)}while(array[0]>=max);return array[0]%size}return Math.floor(Math.random()*size)}
+    function draw(){
+      let choices=pool();
+      if(!choices.length){toast('この設定で選べるお題はありません');return}
+      if(els.avoidRepeat.checked){
+        const used=new Set(drawn);let remain=choices.filter(x=>!used.has(x.id));
+        if(!remain.length){const all=new Set(choices.map(x=>x.id));drawn=drawn.filter(id=>!all.has(id));remain=choices;toast('一巡したので新しい周回へ ✨')}
+        choices=remain;
+      }else if(choices.length>1&&current){
+        const other=choices.filter(x=>x.id!==current.id);if(other.length)choices=other;
+      }
+      current=choices[randomIndex(choices.length)];drawn.push(current.id);timeline.push(current.id);timeline=timeline.slice(-100);
+      renderCurrent(true);
+    }
+    async function copy(){
+      if(!current)return;
+      const text=`#${pad(current.id)} ${current.text}（${byCategory.get(current.category).name}）`;
+      try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text)}else{const t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.append(t);t.select();if(!document.execCommand('copy'))throw Error('copy failed');t.remove()}toast('お題をコピーしたよ ♡')}
+      catch{toast('コピーできませんでした。お題を長押ししてね')}
+    }
+    $('drawBtn').addEventListener('click',draw);
+    els.copyBtn.addEventListener('click',copy);
+    els.backBtn.addEventListener('click',()=>{if(timeline.length<2)return;timeline.pop();current=byId.get(timeline.at(-1));renderCurrent(true)});
+    els.category.addEventListener('change',()=>{if(els.category.value==='12')els.includeFantasy.checked=true;count();save()});
+    els.includeFantasy.addEventListener('change',()=>{if(!els.includeFantasy.checked&&els.category.value==='12')els.category.value='all';count();save()});
+    els.avoidRepeat.addEventListener('change',()=>{count();save()});
+    $('resetBtn').addEventListener('click',()=>{drawn=[];timeline=[];current=null;renderCurrent();toast('抽選履歴をリセットしたよ')});
+    renderCurrent();
+  })();
+  </script>
+</body>
+</html>
